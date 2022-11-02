@@ -9,4 +9,6 @@ class VideoTransformer(VideoTransformerBase):
 
         return img
 
-webrtc_streamer(key="example", video_processor_factory=VideoTransformer)
+webrtc_streamer(key="example", video_processor_factory=VideoTransformer, rtc_configuration={  # Add this line
+        "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
+    })
