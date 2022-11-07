@@ -91,24 +91,23 @@ def Detection(img):
   if len(idxs) > 0:
     # Loop over the indexes we are keeping
     for i in idxs.flatten():
+
+      if classIDs[i] == 2:
     
-      # Extract the bounding box coordinates
-      (x, y) = (boxes[i][0], boxes[i][1])
-      (w, h) = (boxes[i][2], boxes[i][3])
-  
-      # Draw a bounding box rectangle and label on the image
-      color = [int(c) for c in COLORS[classIDs[i]]]
-      cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
-      text = "{}: {:.4f}".format(classNames[classIDs[i]], confidences[i])
-      cv2.putText(img, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
-        0.5, color, 2)
+        # Extract the bounding box coordinates
+        (x, y) = (boxes[i][0], boxes[i][1])
+        (w, h) = (boxes[i][2], boxes[i][3])
 
-      # Count the number of cars detected in the photo
-      if classIDs[i] == 2: 
-        CarCount = CarCount + 1
+        # Draw a bounding box rectangle and label on the image
+        color = [int(c) for c in COLORS[classIDs[i]]]
+        cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
+        text = "{}: {:.4f}".format(classNames[classIDs[i]], confidences[i])
+        cv2.putText(img, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
+          0.5, color, 2)
 
-  # Print the number of cars detected in the photo
-  # print("The Car Count is: ", CarCount)
+        # Count the number of cars detected in the photo
+        if classIDs[i] == 2:
+          CarCount = CarCount + 1
 
   # text
   text = 'Count: ' + str(CarCount)
@@ -132,4 +131,4 @@ def Detection(img):
   img = cv2.putText(img, text, org, font, fontScale,
                       color, thickness, cv2.LINE_AA, False)
 
-  return img
+  return img, CarCount
