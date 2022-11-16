@@ -6,6 +6,9 @@ import numpy as np
 import math
 import time
 import matplotlib.pyplot as plt
+import datetime
+from Email import Send_Email
+import os
 
 # Store Coco Names in a list
 
@@ -13,8 +16,11 @@ classesFile = "coco.names"
 classNames = open(classesFile).read().strip().split('\n')
 
 # Detection confidence threshold
-confThreshold = 0.1
+confThreshold = 0.6
 nmsThreshold = 0.2
+
+# Datatime
+filename = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
 # Initialize a list of colors to represent each possible class label
 np.random.seed(42)
@@ -33,7 +39,7 @@ np.random.seed(42)
 colors = np.random.randint(0, 255, size=(len(classNames), 3), dtype='uint8')
 
 # Function definition to perform detection place bounding boxes over input images & print the number of cars detected
-def Detection(img):
+def Detection(img, DetectionIndex, email, notification):
 
   # Load our input image and grab its spatial dimensions
   (Height, Width) = img.shape[:2]
@@ -92,7 +98,7 @@ def Detection(img):
     # Loop over the indexes we are keeping
     for i in idxs.flatten():
 
-      if classIDs[i] == 2:
+      if classIDs[i] == DetectionIndex:
     
         # Extract the bounding box coordinates
         (x, y) = (boxes[i][0], boxes[i][1])
@@ -105,8 +111,19 @@ def Detection(img):
         cv2.putText(img, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
           0.5, color, 2)
 
+        # Crop detected bounding box into new image
+        Detected = img[y:y+h, x:x+w]
+        cv2.imwrite(filename + ".png", Detected)
+
+        if notification == True:
+          # Send email notification
+          Send_Email(str(email), filename + ".png")
+
+          # Remove the file to prevent excess storage
+          os.remove(filename + ".png")
+
         # Count the number of cars detected in the photo
-        if classIDs[i] == 2:
+        if classIDs[i] == DetectionIndex:
           CarCount = CarCount + 1
 
   # text
