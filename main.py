@@ -3,17 +3,48 @@ from ObjectDectection import Detection
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
-
+import streamlit as st
 
 class VideoTransformer(VideoTransformerBase):
 
     CarCountArray = []
+    #Detection_Index = 0
+
+    global DetectionIndex
+    global email
+    global notification
+
+    st.image('Main.png')
+
+    DetectionIndex = st.radio(
+        "Select Object to be Detected:",
+        ('Person', 'Car'))
+
+    if DetectionIndex == 'Person':
+        DetectionIndex = 0
+    if DetectionIndex == 'Car':
+        DetectionIndex = 2
+
+    notification = st.radio(
+        "Turn on notification system:",
+        ('Yes', 'No'))
+
+    if notification == 'Yes':
+        notification = True
+
+        email = st.text_input('Enter your email: ')
+
+    if notification == 'No':
+        notification = False
+
+        email = ""
+
 
     def transform(self, frame):
 
         img = frame.to_ndarray(format="bgr24")
 
-        img, Carcount = Detection(img)
+        img, Carcount = Detection(img, DetectionIndex, email, notification)
 
         cv2.imwrite('Detection.png', img)
 
@@ -23,10 +54,9 @@ class VideoTransformer(VideoTransformerBase):
             self.CarCountArray.remove(self.CarCountArray[0])
 
         x = self.CarCountArray
-        print(x)
         y = np.sort(self.CarCountArray)
 
-        plt.title("Detection Count")
+        plt.title("Real Time Detection Count Visualization")
         plt.plot(x, y, color="red")
         plt.savefig('Graph.png')
         plt.clf()
@@ -35,9 +65,13 @@ class VideoTransformer(VideoTransformerBase):
         img2 = cv2.imread('Graph.png')
         img = np.concatenate((img1, img2), axis=1)
 
+        st.radio(
+            "Detection Index",
+            ('Person', 'Car'))
+
         return img
 
-webrtc_streamer(key="example", video_processor_factory=VideoTransformer, rtc_configuration={  # Add this line
+webrtc_streamer(key="example", video_processor_factory=VideoTransformer, rtc_configuration={
         "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
     })
 
