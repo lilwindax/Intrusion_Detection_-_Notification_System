@@ -3,4 +3,3 @@ streamlit
 numpy
 streamlit_webrtc
 matplotlib
-email
