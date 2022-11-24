@@ -7,13 +7,6 @@ https://intrusiondetectionandnotificationsystem.streamlit.app/
 
 Users are able to select whether they would like to be able to detect cars or people, and users can enter their email address to be sent an email instantly when the object is detected. 
 
-Use cases: 
-    - Ram raid detection warning
-    - Home surveillance
-    - Intrusion detection in authorised personal locations 
-    - Business security 
-    - Car security 
-
  ## Use cases: 
  
     - Ram raid detection warning
