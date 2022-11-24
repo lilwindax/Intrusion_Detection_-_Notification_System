@@ -13,3 +13,11 @@ Use cases:
     - Intrusion detection in authorised personal locations 
     - Business security 
     - Car security 
+
+ ## Use cases: 
+ 
+    - Ram raid detection warning
+    - Home surveillance 
+    - Intrusion detection in authorise personal locations 
+    - Business security 
+    - Car security 
